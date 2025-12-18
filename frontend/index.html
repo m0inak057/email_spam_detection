@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Spam Detector | Engineering Project</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="hero-icon">🛡️</span>
+                    Email Spam Detection System
+                </h1>
+                <p class="hero-subtitle">AI-Powered Machine Learning Solution for Real-Time Email Classification</p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">99.2%</div>
+                        <div class="stat-label">Accuracy</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">5,574</div>
+                        <div class="stat-label">Training Emails</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">4</div>
+                        <div class="stat-label">ML Models</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">&lt;1s</div>
+                        <div class="stat-label">Response Time</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <span>Email Spam Detector</span>
+            </div>
+            <div class="header-right">
+                <a href="api-docs.html" class="api-docs-link" title="API Documentation" target="_blank">
+                    📚 API Docs
+                </a>
+                <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">
+                    <span class="theme-icon" id="themeIcon">🌞</span>
+                </button>
+            </div>
+            <div class="subtitle">AI-Powered Email Classification System</div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Email History Dashboard -->
+            <div class="card history-dashboard" id="historyDashboard">
+                <div class="dashboard-header">
+                    <h2>📊 Scan History Dashboard</h2>
+                    <button id="clearHistoryBtn" class="btn btn-secondary btn-sm">Clear History</button>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📧</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="totalScans">0</div>
+                            <div class="stat-label">Total Scans</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🚨</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="spamCaught">0</div>
+                            <div class="stat-label">Spam Caught</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="legitimateEmails">0</div>
+                            <div class="stat-label">Legitimate</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="successRate">0%</div>
+                            <div class="stat-label">Avg Confidence</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="history-section">
+                    <h3>Recent Scans</h3>
+                    <div class="history-list" id="historyList">
+                        <div class="no-history">No scan history yet. Start by checking an email!</div>
+                    </div>
+                </div>
+            </div>
+                                                                                                                                                                                                                                                            
+            <!-- Input Section -->
+            <div class="card input-section">
+                <div class="input-mode-tabs">
+                    <button class="mode-tab active" data-mode="single">Single Email</button>
+                    <button class="mode-tab" data-mode="batch">Batch CSV Upload</button>
+                </div>
+
+                <!-- Single Email Mode -->
+                <div id="singleEmailMode" class="input-mode active">
+                    <h2>Enter Email Text</h2>
+                    <p class="description">Paste your email content below to check if it's spam or legitimate.</p>
+                    
+                    <!-- Email Templates Library -->
+                    <div class="templates-section">
+                        <button class="templates-toggle" id="templatesToggle" onclick="toggleTemplates()">
+                            📚 Load Sample Template
+                        </button>
+                        <div class="templates-dropdown" id="templatesDropdown" style="display: none;">
+                            <div class="templates-header">
+                                <h4>Choose a Template:</h4>
+                                <button class="close-templates" onclick="toggleTemplates()">✖</button>
+                            </div>
+                            <div class="templates-grid" id="templatesGrid">
+                                <!-- Templates will be loaded here by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <textarea 
+                        id="emailInput" 
+                        placeholder="Paste your email text here...&#10;&#10;Example:&#10;Congratulations! You have won $1,000,000! Click here to claim your prize NOW!!!"
+                        rows="10"
+                    ></textarea>
+                    
+                    <!-- Real-time Preview -->
+                    <div class="live-preview-panel" id="livePreviewPanel" style="display: none;">
+                        <h4>📝 Live Preview</h4>
+                        <div class="preview-content" id="previewContent"></div>
+                        <div class="preview-stats">
+                            <span><strong>Words:</strong> <span id="wordCount">0</span></span>
+                            <span><strong>Sentences:</strong> <span id="sentenceCount">0</span></span>
+                            <span><strong>URLs:</strong> <span id="urlCountPreview">0</span></span>
+                            <span><strong>Caps:</strong> <span id="capsPreview">0%</span></span>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button id="checkBtn" class="btn btn-primary">
+                            <span class="btn-text">Check Email</span>
+                            <span class="spinner" id="spinner"></span>
+                        </button>
+                        <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                        <button id="sampleBtn" class="btn btn-secondary">Try Sample</button>
+                    </div>
+
+                    <div class="char-count">
+                        <span id="charCount">0</span> characters
+                    </div>
+                </div>
+
+                <!-- Batch CSV Mode -->
+                <div id="batchCsvMode" class="input-mode" style="display: none;">
+                    <h2>Batch Email Analysis</h2>
+                    <p class="description">Upload a CSV file with emails to analyze multiple messages at once</p>
+                    
+                    <div class="csv-info-box">
+                        <h4>📋 CSV Format Requirements:</h4>
+                        <ul>
+                            <li>Column header: <code>email</code> or <code>text</code></li>
+                            <li>One email per row</li>
+                            <li>Maximum 100 emails per batch</li>
+                            <li>UTF-8 encoding recommended</li>
+                        </ul>
+                    </div>
+
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <input type="file" id="csvFileInput" accept=".csv" hidden>
+                        <div class="upload-prompt">
+                            <div class="upload-icon">📂</div>
+                            <p>Click to browse or drag and drop CSV file</p>
+                            <span class="file-name" id="fileName"></span>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button id="processCsvBtn" class="btn btn-primary" disabled>
+                            <span class="btn-text">Process Batch</span>
+                            <span class="spinner" id="batchSpinner"></span>
+                        </button>
+                        <button id="clearCsvBtn" class="btn btn-secondary">Clear File</button>
+                        <button id="downloadTemplateBtn" class="btn btn-secondary">Download Template</button>
+                    </div>
+
+                    <div class="batch-progress" id="batchProgress" style="display: none;">
+                        <div class="progress-info">
+                            <span>Processing: <span id="progressText">0/0</span></span>
+                            <span id="progressPercent">0%</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" id="progressBarFill"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+ 
+            <!-- Result Section -->
+            <div class="card result-section" id="resultSection" style="display: none;">
+                <h2>Classification Result</h2>
+                
+                <div class="result-badge" id="resultBadge">
+                    <div class="badge-icon" id="badgeIcon"></div>
+                    <div class="badge-text" id="badgeText">SPAM</div>
+                </div>
+
+                <!-- Risk Level Indicator -->
+                <div class="risk-level-container" id="riskLevelContainer">
+                    <h3>Risk Assessment</h3>
+                    <div class="risk-gauge">
+                        <div class="risk-indicator" id="riskIndicator">
+                            <span class="risk-icon" id="riskIcon">⚠️</span>
+                            <span class="risk-label" id="riskLabel">Medium Risk</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Confidence Score:</span>
+                        <span class="detail-value" id="confidenceValue">95.5%</span>
+                    </div>
+                    <div class="confidence-visualization">
+                        <div class="confidence-bar-enhanced">
+                            <div class="confidence-fill-enhanced" id="confidenceFillEnhanced">
+                                <span class="confidence-percentage" id="confidencePercentage">0%</span>
+                            </div>
+                        </div>
+                        <div class="confidence-interpretation" id="confidenceInterpretation">
+                            <span class="confidence-label" id="confidenceLabel">Very High Confidence</span>
+                        </div>
+                    </div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" id="confidenceFill"></div>
+                    </div>
+                    
+                    <!-- Model Comparison Section -->
+                    <div class="model-comparison-section" id="modelComparisonSection" style="display: none;">
+                        <h3>🤖 Model Comparison Analysis</h3>
+                        <p class="section-description">See how different AI models classify this email</p>
+                        
+                        <div class="agreement-gauge">
+                            <div class="agreement-icon">🎯</div>
+                            <div class="agreement-content">
+                                <div class="agreement-label">Model Agreement</div>
+                                <div class="agreement-value" id="modelAgreement">100%</div>
+                                <div class="agreement-description" id="agreementDescription">All models agree</div>
+                            </div>
+                        </div>
+                        
+                        <div class="models-grid" id="modelsGrid">
+                            <!-- Individual model cards will be inserted here -->
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span class="detail-label">Email Length:</span>
+                        <span class="detail-value" id="emailLength">0 characters</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span class="detail-label">Processed Length:</span>
+                        <span class="detail-value" id="cleanedLength">0 characters</span>
+                    </div>
+                </div>
+
+                <!-- Explainable AI - Word Importance -->
+                <div class="word-importance-section" id="wordImportanceSection">
+                    <h3>🧠 AI Explainability: Word Analysis</h3>
+                    <p class="section-description">See which words influenced the spam/ham classification</p>
+                    
+                    <div class="word-importance-legend">
+                        <div class="legend-item">
+                            <span class="legend-color spam-word"></span>
+                            <span>Spam Indicators</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color ham-word"></span>
+                            <span>Legitimate Indicators</span>
+                        </div>
+                    </div>
+                    
+                    <div class="word-cloud" id="wordCloud">
+                        <!-- Words will be dynamically inserted here -->
+                    </div>
+                    
+                    <div class="word-importance-list" id="wordImportanceList">
+                        <!-- Top contributing words with scores -->
+                    </div>
+                </div>
+
+                <!-- Spam Indicators Breakdown -->
+                <div class="spam-indicators-section" id="spamIndicatorsSection">
+                    <h3>📊 Spam Indicators Analysis</h3>
+                    <div class="indicators-grid">
+                        <div class="indicator-item">
+                            <div class="indicator-icon">🔗</div>
+                            <div class="indicator-content">
+                                <div class="indicator-label">URLs Detected</div>
+                                <div class="indicator-value" id="urlCount">0</div>
+                            </div>
+                        </div>
+                        <div class="indicator-item">
+                            <div class="indicator-icon">📢</div>
+                            <div class="indicator-content">
+                                <div class="indicator-label">Capitalization</div>
+                                <div class="indicator-value" id="capsPercentage">0%</div>
+                            </div>
+                        </div>
+                        <div class="indicator-item">
+                            <div class="indicator-icon">❗</div>
+                            <div class="indicator-content">
+                                <div class="indicator-label">Exclamation Marks</div>
+                                <div class="indicator-value" id="exclamationCount">0</div>
+                            </div>
+                        </div>
+                        <div class="indicator-item">
+                            <div class="indicator-icon">💰</div>
+                            <div class="indicator-content">
+                                <div class="indicator-label">Money Terms</div>
+                                <div class="indicator-value" id="moneyTermsCount">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Pattern Analysis -->
+                <div class="patterns-section" id="patternsSection">
+                    <h3>🔍 Detected Patterns & Entities</h3>
+                    <div class="patterns-grid">
+                        <div class="pattern-card">
+                            <div class="pattern-icon">🔗</div>
+                            <div class="pattern-info">
+                                <div class="pattern-label">URLs</div>
+                                <div class="pattern-count" id="patternsUrls">0</div>
+                                <div class="pattern-list" id="urlsList"></div>
+                            </div>
+                        </div>
+                        <div class="pattern-card">
+                            <div class="pattern-icon">📧</div>
+                            <div class="pattern-info">
+                                <div class="pattern-label">Email Addresses</div>
+                                <div class="pattern-count" id="patternsEmails">0</div>
+                                <div class="pattern-list" id="emailsList"></div>
+                            </div>
+                        </div>
+                        <div class="pattern-card">
+                            <div class="pattern-icon">📱</div>
+                            <div class="pattern-info">
+                                <div class="pattern-label">Phone Numbers</div>
+                                <div class="pattern-count" id="patternsPhones">0</div>
+                                <div class="pattern-list" id="phonesList"></div>
+                            </div>
+                        </div>
+                        <div class="pattern-card">
+                            <div class="pattern-icon">💰</div>
+                            <div class="pattern-info">
+                                <div class="pattern-label">Dollar Amounts</div>
+                                <div class="pattern-count" id="patternsDollars">0</div>
+                                <div class="pattern-list" id="dollarsList"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suspicious Keywords -->
+                <div class="suspicious-keywords-section" id="suspiciousKeywordsSection">
+                    <h3>🚨 Suspicious Keywords Detected</h3>
+                    <div class="keywords-container" id="keywordsContainer">
+                        <!-- Keywords will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <!-- Safety Recommendations -->
+                <div class="safety-recommendations-section" id="safetyRecommendationsSection">
+                    <h3>🛡️ Safety Recommendations</h3>
+                    <div class="recommendations-list" id="recommendationsList">
+                        <!-- Recommendations will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <div class="result-explanation" id="resultExplanation">
+                    <!-- Explanation will be inserted here -->
+                </div>
+                
+                <!-- Export Options -->
+                <div class="export-section">
+                    <h3>💾 Export Results</h3>
+                    <div class="export-buttons">
+                        <button class="export-btn" id="exportPdfBtn" onclick="exportResultAsPdf()">
+                            <span class="export-icon">📄</span>
+                            <span>Export as PDF</span>
+                        </button>
+                        <button class="export-btn" id="exportJsonBtn" onclick="exportResultAsJson()">
+                            <span class="export-icon">📋</span>
+                            <span>Export as JSON</span>
+                        </button>
+                        <button class="export-btn" id="copyLinkBtn" onclick="copyShareableLink()">
+                            <span class="export-icon">🔗</span>
+                            <span>Copy Shareable Link</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Section -->
+            <div class="card error-section" id="errorSection" style="display: none;">
+                <h2>Error</h2>
+                <p class="error-message" id="errorMessage"></p>
+            </div>
+
+            <!-- Batch Results Section -->
+            <div class="card batch-results-section" id="batchResultsSection" style="display: none;">
+                <h2>Batch Analysis Results</h2>
+                
+                <div class="batch-summary">
+                    <h3>📊 Summary</h3>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <div class="summary-icon">📧</div>
+                            <div class="summary-info">
+                                <div class="summary-value" id="batchTotal">0</div>
+                                <div class="summary-label">Total Processed</div>
+                            </div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-icon">🚨</div>
+                            <div class="summary-info">
+                                <div class="summary-value" id="batchSpam">0</div>
+                                <div class="summary-label">Spam Detected</div>
+                            </div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-icon">✅</div>
+                            <div class="summary-info">
+                                <div class="summary-value" id="batchHam">0</div>
+                                <div class="summary-label">Legitimate</div>
+                            </div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-icon">🎯</div>
+                            <div class="summary-info">
+                                <div class="summary-value" id="batchConfidence">0%</div>
+                                <div class="summary-label">Avg Confidence</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="batch-actions">
+                    <button id="exportCsvBtn" class="btn btn-primary">📥 Export Results as CSV</button>
+                    <button id="exportJsonBtn" class="btn btn-secondary">📄 Export as JSON</button>
+                </div>
+
+                <div class="batch-results-table-container">
+                    <h3>Detailed Results</h3>
+                    <div class="table-wrapper">
+                        <table class="batch-results-table" id="batchResultsTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Email Preview</th>
+                                    <th>Prediction</th>
+                                    <th>Confidence</th>
+                                    <th>Risk Level</th>
+                                    <th>URLs</th>
+                                    <th>Keywords</th>
+                                </tr>
+                            </thead>
+                            <tbody id="batchTableBody">
+                                <!-- Results will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- About Section -->
+        <section class="about-section">
+            <h3>About This Project</h3>
+            <div class="about-content">
+                <div class="about-card">
+                    <h4>🎯 Purpose</h4>
+                    <p>This Email Spam Detection System is an engineering degree project that demonstrates the practical application of Machine Learning and Natural Language Processing to solve real-world cybersecurity challenges. The system provides instant, accurate spam detection to protect users from malicious emails.</p>
+                </div>
+                <div class="about-card">
+                    <h4>💡 Motivation</h4>
+                    <p>With over 300 billion emails sent daily and spam accounting for nearly 50% of all email traffic, automated spam detection has become crucial. This project addresses the need for intelligent filtering systems that can adapt to evolving spam tactics.</p>
+                </div>
+                <div class="about-card">
+                    <h4>🔧 Technology Stack</h4>
+                    <ul class="tech-list">
+                        <li><strong>Backend:</strong> Django REST Framework (Python)</li>
+                        <li><strong>ML Libraries:</strong> scikit-learn, NLTK, pandas, numpy</li>
+                        <li><strong>Frontend:</strong> HTML5, CSS3, JavaScript (ES6+)</li>
+                        <li><strong>NLP:</strong> TF-IDF Vectorization, Text Preprocessing</li>
+                        <li><strong>Models:</strong> Naive Bayes, Logistic Regression, SVM, Random Forest</li>
+                    </ul>
+                </div>
+                <div class="about-card">
+                    <h4>✨ Key Benefits</h4>
+                    <ul class="benefits-list">
+                        <li>Real-time spam detection with instant results</li>
+                        <li>High accuracy using ensemble ML models</li>
+                        <li>Privacy-focused: No data storage or logging</li>
+                        <li>User-friendly interface with detailed confidence metrics</li>
+                        <li>Scalable REST API architecture</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features">
+            <h3>How It Works</h3>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">📝</div>
+                    <h4>Text Preprocessing</h4>
+                    <p>Cleans and normalizes email text using NLP techniques</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🔤</div>
+                    <h4>TF-IDF Vectorization</h4>
+                    <p>Converts text into numerical features for analysis</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🤖</div>
+                    <h4>ML Classification</h4>
+                    <p>Uses trained model (Naive Bayes/Logistic Regression)</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <h4>Confidence Score</h4>
+                    <p>Provides probability-based prediction confidence</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Model Information Section -->
+        <section class="model-info-section">
+            <h3>Model Performance & Details</h3>
+            <div class="model-content">
+                <div class="algorithms-card">
+                    <h4>🧠 Machine Learning Algorithms</h4>
+                    <div class="algorithm-grid">
+                        <div class="algorithm-item">
+                            <div class="algo-name">Naive Bayes</div>
+                            <div class="algo-desc">Probabilistic classifier based on Bayes' theorem</div>
+                        </div>
+                        <div class="algorithm-item">
+                            <div class="algo-name">Logistic Regression</div>
+                            <div class="algo-desc">Linear model for binary classification</div>
+                        </div>
+                        <div class="algorithm-item">
+                            <div class="algo-name">Support Vector Machine</div>
+                            <div class="algo-desc">Finds optimal hyperplane for classification</div>
+                        </div>
+                        <div class="algorithm-item">
+                            <div class="algo-name">Random Forest</div>
+                            <div class="algo-desc">Ensemble of decision trees for robust prediction</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="performance-metrics">
+                    <h4>📈 Model Performance Metrics</h4>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-value">99.2%</div>
+                            <div class="metric-label">Accuracy</div>
+                            <div class="metric-desc">Overall correct predictions</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">98.5%</div>
+                            <div class="metric-label">Precision</div>
+                            <div class="metric-desc">Spam predictions that are correct</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">97.8%</div>
+                            <div class="metric-label">Recall</div>
+                            <div class="metric-desc">Actual spam emails detected</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">98.1%</div>
+                            <div class="metric-label">F1-Score</div>
+                            <div class="metric-desc">Harmonic mean of precision & recall</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dataset-info">
+                    <h4>📚 Training Dataset</h4>
+                    <div class="dataset-stats">
+                        <div class="dataset-stat">
+                            <span class="stat-icon">📧</span>
+                            <div>
+                                <div class="stat-title">Total Emails</div>
+                                <div class="stat-number">5,574 messages</div>
+                            </div>
+                        </div>
+                        <div class="dataset-stat">
+                            <span class="stat-icon">✅</span>
+                            <div>
+                                <div class="stat-title">Legitimate (Ham)</div>
+                                <div class="stat-number">4,827 emails (86.6%)</div>
+                            </div>
+                        </div>
+                        <div class="dataset-stat">
+                            <span class="stat-icon">⚠️</span>
+                            <div>
+                                <div class="stat-title">Spam</div>
+                                <div class="stat-number">747 emails (13.4%)</div>
+                            </div>
+                        </div>
+                        <div class="dataset-stat">
+                            <span class="stat-icon">🔤</span>
+                            <div>
+                                <div class="stat-title">Features</div>
+                                <div class="stat-number">3,000 TF-IDF features</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How to Use Section -->
+        <section class="guide-section">
+            <h3>How to Use This Detector</h3>
+            <div class="guide-steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Copy Email Content</h4>
+                        <p>Copy the text content from the email you want to check. Include the subject line and body text for best results.</p>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Paste into Text Area</h4>
+                        <p>Paste the email content into the text area above. You can also click "Try Sample" to test with pre-loaded examples.</p>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Click "Check Email"</h4>
+                        <p>Press the "Check Email" button. The system will process your text through the ML pipeline in under 1 second.</p>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Review Results</h4>
+                        <p>Analyze the classification result (SPAM or SAFE), confidence score, and detailed metrics. Higher confidence means more certainty.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="understanding-results">
+                <h4>📖 Understanding Your Results</h4>
+                <div class="result-guide-grid">
+                    <div class="result-guide-item">
+                        <div class="guide-badge spam-badge">SPAM</div>
+                        <p><strong>Spam Detected:</strong> The email exhibits patterns common in spam messages. Consider deleting or marking as spam.</p>
+                    </div>
+                    <div class="result-guide-item">
+                        <div class="guide-badge safe-badge">SAFE</div>
+                        <p><strong>Legitimate Email:</strong> The email appears to be genuine. It's likely safe to read and respond to.</p>
+                    </div>
+                    <div class="result-guide-item">
+                        <div class="confidence-indicator high">90-100%</div>
+                        <p><strong>High Confidence:</strong> The model is very certain about its prediction. Results are highly reliable.</p>
+                    </div>
+                    <div class="result-guide-item">
+                        <div class="confidence-indicator medium">70-89%</div>
+                        <p><strong>Medium Confidence:</strong> The prediction is reliable but review the email content carefully.</p>
+                    </div>
+                    <div class="result-guide-item">
+                        <div class="confidence-indicator low">50-69%</div>
+                        <p><strong>Low Confidence:</strong> The model is uncertain. Use your best judgment and look for red flags.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>📚 Academic Project</h4>
+                    <p>This Email Spam Detection System is a final year engineering degree project demonstrating practical applications of Machine Learning, Natural Language Processing, and Full-Stack Web Development.</p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>🛠️ Built With</h4>
+                    <div class="tech-badges">
+                        <span class="tech-badge">Django</span>
+                        <span class="tech-badge">Python</span>
+                        <span class="tech-badge">scikit-learn</span>
+                        <span class="tech-badge">NLTK</span>
+                        <span class="tech-badge">JavaScript</span>
+                        <span class="tech-badge">REST API</span>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>👨‍💻 Developer Information</h4>
+                    <p><strong>Project Type:</strong> Engineering Degree Final Year Project</p>
+                    <p><strong>Domain:</strong> Machine Learning & Cybersecurity</p>
+                    <p><strong>Year:</strong> 2024-2025</p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>⚡ System Status</h4>
+                    <p class="api-status">
+                        API Server: <span id="apiStatus" class="status-indicator checking">Checking...</span>
+                    </p>
+                    <p class="system-info">Real-time ML-powered spam detection | Privacy-focused | No data storage</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024-2025 Email Spam Detection System | Engineering Degree Project</p>
+                <p class="disclaimer">For educational and demonstration purposes only</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

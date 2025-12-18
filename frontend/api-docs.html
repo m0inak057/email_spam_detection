@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - Email Spam Detector</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0d0d0d;
+            color: #00ff41;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #1a1a1a;
+            border-radius: 12px;
+            border: 2px solid #00ff41;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+
+        .header p {
+            color: #88ff88;
+            font-size: 16px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .nav-link {
+            padding: 10px 20px;
+            background: rgba(0, 255, 65, 0.1);
+            border: 1px solid #00ff41;
+            border-radius: 6px;
+            color: #00ff41;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(0, 255, 65, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .section {
+            background: #1a1a1a;
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #00ffff;
+            margin-bottom: 20px;
+            font-size: 28px;
+            border-bottom: 2px solid rgba(0, 255, 65, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #00ff88;
+            margin: 25px 0 15px 0;
+            font-size: 22px;
+        }
+
+        .endpoint {
+            background: rgba(0, 0, 0, 0.4);
+            border-left: 4px solid #00ff41;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .method.post {
+            background: #00ff41;
+            color: #000;
+        }
+
+        .method.get {
+            background: #00ffff;
+            color: #000;
+        }
+
+        .endpoint-url {
+            font-family: 'Courier New', monospace;
+            color: #ffaa00;
+            font-size: 16px;
+        }
+
+        .code-block {
+            background: #000;
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            margin: 0;
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .code-label {
+            color: #00ffff;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .copy-btn {
+            padding: 5px 12px;
+            background: rgba(0, 255, 65, 0.2);
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(0, 255, 65, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid rgba(0, 255, 65, 0.2);
+        }
+
+        th {
+            background: rgba(0, 255, 65, 0.1);
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        td {
+            color: #88ff88;
+        }
+
+        .try-it {
+            background: rgba(138, 43, 226, 0.1);
+            border: 2px solid #bb86fc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .try-it h4 {
+            color: #bb86fc;
+            margin-bottom: 15px;
+        }
+
+        .try-it-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(187, 134, 252, 0.3);
+            border-radius: 6px;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 15px;
+            resize: vertical;
+        }
+
+        .try-it-btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.3), rgba(138, 43, 226, 0.2));
+            border: 2px solid #bb86fc;
+            border-radius: 6px;
+            color: #bb86fc;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .try-it-btn:hover {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.4), rgba(138, 43, 226, 0.3));
+            transform: translateY(-2px);
+        }
+
+        .try-it-response {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 6px;
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .response-label {
+            color: #00ffff;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .badge.required {
+            background: rgba(255, 0, 64, 0.2);
+            color: #ff0040;
+            border: 1px solid #ff0040;
+        }
+
+        .badge.optional {
+            background: rgba(255, 170, 0, 0.2);
+            color: #ffaa00;
+            border: 1px solid #ffaa00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📧 Email Spam Detector API</h1>
+            <p>Complete API Documentation for Developers</p>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">← Back to App</a>
+                <a href="#endpoints" class="nav-link">Endpoints</a>
+                <a href="#examples" class="nav-link">Examples</a>
+                <a href="#try-it" class="nav-link">Try It Live</a>
+            </div>
+        </div>
+
+        <!-- Introduction -->
+        <div class="section" id="introduction">
+            <h2>🚀 Introduction</h2>
+            <p>Welcome to the Email Spam Detector API documentation. This API uses advanced machine learning algorithms to classify emails as spam or legitimate (ham) with high accuracy.</p>
+            
+            <h3>Base URL</h3>
+            <div class="code-block">
+                <pre>http://localhost:8000/api</pre>
+            </div>
+
+            <h3>Features</h3>
+            <ul>
+                <li>Single email classification</li>
+                <li>Batch processing (up to 100 emails)</li>
+                <li>Confidence scoring</li>
+                <li>Spam indicator analysis</li>
+                <li>Risk level assessment</li>
+                <li>Model comparison (4 AI models)</li>
+                <li>Pattern detection (URLs, emails, phone numbers)</li>
+            </ul>
+        </div>
+
+        <!-- Authentication -->
+        <div class="section" id="authentication">
+            <h2>🔐 Authentication</h2>
+            <p>Currently, this API does not require authentication. It's designed for local development and demonstration purposes.</p>
+            <p><strong>Note:</strong> For production deployment, implement proper authentication (API keys, OAuth, JWT, etc.)</p>
+        </div>
+
+        <!-- Endpoints -->
+        <div class="section" id="endpoints">
+            <h2>📡 API Endpoints</h2>
+
+            <!-- Health Check -->
+            <div class="endpoint">
+                <h3>
+                    <span class="method get">GET</span>
+                    <span class="endpoint-url">/api/health/</span>
+                </h3>
+                <p>Check if the API is running and models are loaded.</p>
+
+                <h4>Response (200 OK)</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">JSON Response</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre>{
+  "status": "healthy",
+  "message": "Spam detection API is running",
+  "models_loaded": true
+}</pre>
+                </div>
+            </div>
+
+            <!-- Predict Single Email -->
+            <div class="endpoint">
+                <h3>
+                    <span class="method post">POST</span>
+                    <span class="endpoint-url">/api/predict/</span>
+                </h3>
+                <p>Classify a single email as spam or ham.</p>
+
+                <h4>Request Body</h4>
+                <table>
+                    <tr>
+                        <th>Field</th>
+                        <th>Type</th>
+                        <th>Required</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>email</code></td>
+                        <td>string</td>
+                        <td><span class="badge required">Required</span></td>
+                        <td>The email text content to analyze</td>
+                    </tr>
+                </table>
+
+                <h4>Example Request</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">cURL</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre>curl -X POST http://localhost:8000/api/predict/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "Congratulations! You won $1,000,000! Click here now!"
+  }'</pre>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">JavaScript (Fetch)</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre>fetch('http://localhost:8000/api/predict/', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    email: 'Congratulations! You won $1,000,000!'
+  })
+})
+.then(response => response.json())
+.then(data => console.log(data));</pre>
+                </div>
+
+                <h4>Response (200 OK)</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">JSON Response</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre>{
+  "status": "success",
+  "prediction": "spam",
+  "confidence": 0.9847,
+  "email_length": 52,
+  "cleaned_length": 41,
+  "risk_level": "Critical",
+  "spam_indicators": {
+    "suspicious_keywords": ["WIN", "CLICK", "NOW"],
+    "url_count": 0,
+    "caps_percentage": 15.4,
+    "exclamation_count": 2,
+    "money_terms": ["$", "WON"],
+    "urgency_words": ["NOW"]
+  },
+  "safety_recommendations": [
+    "This email shows critical spam indicators",
+    "Do not click any links",
+    "Do not reply or provide personal information",
+    "Delete this email immediately"
+  ],
+  "word_importance": [
+    {"word": "won", "importance": 0.245, "type": "spam"},
+    {"word": "congratulations", "importance": 0.189, "type": "spam"}
+  ],
+  "patterns": {
+    "urls": [],
+    "email_addresses": [],
+    "phone_numbers": [],
+    "ip_addresses": [],
+    "dollar_amounts": ["$1,000,000"],
+    "percentages": []
+  },
+  "model_comparison": {
+    "models": [
+      {"model_name": "Naive Bayes", "prediction": "spam", "confidence": 98.5},
+      {"model_name": "Logistic Regression", "prediction": "spam", "confidence": 96.2},
+      {"model_name": "Random Forest", "prediction": "spam", "confidence": 97.8},
+      {"model_name": "SVM", "prediction": "spam", "confidence": 99.1}
+    ],
+    "agreement": 100.0,
+    "total_models": 4
+  }
+}</pre>
+                </div>
+            </div>
+
+            <!-- Batch Predict -->
+            <div class="endpoint">
+                <h3>
+                    <span class="method post">POST</span>
+                    <span class="endpoint-url">/api/predict-batch/</span>
+                </h3>
+                <p>Classify multiple emails at once (maximum 100 emails per request).</p>
+
+                <h4>Request Body</h4>
+                <table>
+                    <tr>
+                        <th>Field</th>
+                        <th>Type</th>
+                        <th>Required</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>emails</code></td>
+                        <td>array[string]</td>
+                        <td><span class="badge required">Required</span></td>
+                        <td>Array of email texts (max 100)</td>
+                    </tr>
+                </table>
+
+                <h4>Example Request</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">JSON Request</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre>{
+  "emails": [
+    "Meeting at 3pm tomorrow",
+    "WIN FREE MONEY NOW!!!",
+    "Your order has shipped"
+  ]
+}</pre>
+                </div>
+
+                <h4>Response (200 OK)</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">JSON Response</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre>{
+  "status": "success",
+  "results": [
+    {"email": "Meeting at 3pm...", "prediction": "ham", "confidence": 0.92},
+    {"email": "WIN FREE MONEY...", "prediction": "spam", "confidence": 0.98},
+    {"email": "Your order has...", "prediction": "ham", "confidence": 0.89}
+  ],
+  "summary": {
+    "total": 3,
+    "processed": 3,
+    "failed": 0,
+    "spam_count": 1,
+    "ham_count": 2,
+    "avg_confidence": 0.93
+  }
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Codes -->
+        <div class="section" id="errors">
+            <h2>⚠️ Error Codes</h2>
+            <table>
+                <tr>
+                    <th>Status Code</th>
+                    <th>Error</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>400</td>
+                    <td>Bad Request</td>
+                    <td>Missing required fields or invalid data format</td>
+                </tr>
+                <tr>
+                    <td>405</td>
+                    <td>Method Not Allowed</td>
+                    <td>Wrong HTTP method used (e.g., GET instead of POST)</td>
+                </tr>
+                <tr>
+                    <td>500</td>
+                    <td>Internal Server Error</td>
+                    <td>Model not loaded or server error</td>
+                </tr>
+            </table>
+
+            <h4>Error Response Example</h4>
+            <div class="code-block">
+                <pre>{
+  "status": "error",
+  "message": "Email text is required"
+}</pre>
+            </div>
+        </div>
+
+        <!-- Try It Live -->
+        <div class="section" id="try-it">
+            <h2>🧪 Try It Live</h2>
+            <p>Test the API directly from this documentation page!</p>
+
+            <div class="try-it">
+                <h4>POST /api/predict/</h4>
+                <label>Email Text:</label>
+                <textarea id="tryItInput" class="try-it-input" rows="5" placeholder="Enter email text to test...">Congratulations! You have won $1,000,000! Click here to claim your prize NOW!!!</textarea>
+                <button class="try-it-btn" onclick="tryApi()">Send Request</button>
+                
+                <div id="tryItResponse" class="try-it-response" style="display: none;">
+                    <div class="response-label">Response:</div>
+                    <pre id="responseContent"></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rate Limits -->
+        <div class="section">
+            <h2>🚦 Rate Limits</h2>
+            <p>Currently, there are no rate limits for this local development API.</p>
+            <p><strong>Recommendations for production:</strong></p>
+            <ul>
+                <li>Implement rate limiting (e.g., 100 requests per minute per IP)</li>
+                <li>Add API key authentication</li>
+                <li>Set up monitoring and logging</li>
+                <li>Use caching for repeated requests</li>
+            </ul>
+        </div>
+
+        <!-- CORS -->
+        <div class="section">
+            <h2>🌐 CORS Configuration</h2>
+            <p>CORS (Cross-Origin Resource Sharing) is enabled for browser extension compatibility.</p>
+            <p><strong>Allowed origins:</strong> All origins (development mode)</p>
+            <p><strong>For production:</strong> Restrict origins to specific domains</p>
+        </div>
+    </div>
+
+    <script>
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block').querySelector('pre');
+            const text = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        async function tryApi() {
+            const input = document.getElementById('tryItInput').value;
+            const responseDiv = document.getElementById('tryItResponse');
+            const responseContent = document.getElementById('responseContent');
+            
+            if (!input.trim()) {
+                alert('Please enter some email text');
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://localhost:8000/api/predict/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: input })
+                });
+                
+                const data = await response.json();
+                responseContent.textContent = JSON.stringify(data, null, 2);
+                responseDiv.style.display = 'block';
+            } catch (error) {
+                responseContent.textContent = `Error: ${error.message}\n\nMake sure the backend server is running on http://localhost:8000`;
+                responseDiv.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
