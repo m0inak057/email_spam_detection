@@ -13,18 +13,20 @@ try:
     import nltk
     from nltk.corpus import stopwords
     from nltk.stem import WordNetLemmatizer
-    
-    # Download required NLTK data (run once)
-    # You may need to run these manually:
-    # nltk.download('stopwords')
-    # nltk.download('wordnet')
-    # nltk.download('omw-1.4')
-    
-    NLTK_AVAILABLE = True
-    STOP_WORDS = set(stopwords.words('english'))
-    lemmatizer = WordNetLemmatizer()
+
+    # We try to load NLTK resources, but gracefully degrade if
+    # the corpora are not available (e.g., in production where
+    # nltk.download has not been run).
+    try:
+        STOP_WORDS = set(stopwords.words('english'))
+    except LookupError:
+        STOP_WORDS = set()
+
+    try:
+        lemmatizer = WordNetLemmatizer()
+    except LookupError:
+        lemmatizer = None
 except ImportError:
-    NLTK_AVAILABLE = False
     STOP_WORDS = set()
     lemmatizer = None
     print("⚠️ NLTK not available. Install with: pip install nltk")
@@ -65,7 +67,7 @@ def remove_extra_whitespace(text: str) -> str:
 
 def remove_stopwords(text: str) -> str:
     """Remove stopwords from text."""
-    if not NLTK_AVAILABLE:
+    if not STOP_WORDS:
         return text
     
     words = text.split()
@@ -75,7 +77,7 @@ def remove_stopwords(text: str) -> str:
 
 def lemmatize_text(text: str) -> str:
     """Lemmatize words in text."""
-    if not NLTK_AVAILABLE or lemmatizer is None:
+    if lemmatizer is None:
         return text
     
     words = text.split()
@@ -136,11 +138,11 @@ def clean_text(text: str,
     text = remove_extra_whitespace(text)
     
     # Step 8: Remove stopwords (optional)
-    if remove_stop_words and NLTK_AVAILABLE:
+    if remove_stop_words and STOP_WORDS:
         text = remove_stopwords(text)
     
     # Step 9: Lemmatize (optional)
-    if lemmatize and NLTK_AVAILABLE:
+    if lemmatize and lemmatizer is not None:
         text = lemmatize_text(text)
     
     return text
