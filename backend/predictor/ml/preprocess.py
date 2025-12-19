@@ -79,10 +79,15 @@ def lemmatize_text(text: str) -> str:
     """Lemmatize words in text."""
     if lemmatizer is None:
         return text
-    
+
     words = text.split()
-    lemmatized_words = [lemmatizer.lemmatize(word) for word in words]
-    return ' '.join(lemmatized_words)
+    try:
+        lemmatized_words = [lemmatizer.lemmatize(word) for word in words]
+        return ' '.join(lemmatized_words)
+    except LookupError:
+        # If NLTK's wordnet data is missing in production,
+        # skip lemmatization instead of raising an error.
+        return text
 
 
 def clean_text(text: str, 
