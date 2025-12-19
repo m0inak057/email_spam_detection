@@ -53,9 +53,13 @@ db.sqlite3-journal
 *.csv
 *.xlsx
 *.json
-*.txt
 spam.csv
 spam_cleaned.csv
+
+# Keep general dataset text files ignored, but allow the
+# Python dependency file used for deployment.
+*.txt
+!backend/requirements.txt
 
 # Environment variables
 .env

@@ -1,5 +1,13 @@
 // Configuration
-const API_URL = 'http://localhost:8000/api';
+// In development we call the local Django server.
+// In production (e.g. Vercel), we call the Render backend.
+const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+// TODO: replace this with your actual Render base URL, e.g.
+// 'https://your-service-name.onrender.com'
+const RENDER_BASE_URL = 'https://email-spam-detection-rdtq.onrender.com';
+
+const API_BASE = isLocalhost ? 'http://localhost:8000' : RENDER_BASE_URL;
+const API_URL = `${API_BASE}/api`;
 const PREDICT_ENDPOINT = `${API_URL}/predict/`;
 const BATCH_ENDPOINT = `${API_URL}/predict-batch/`;
 const HEALTH_ENDPOINT = `${API_URL}/health/`;
